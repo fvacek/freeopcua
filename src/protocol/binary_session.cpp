@@ -57,14 +57,14 @@ namespace OpcUa
   UserIdentifyTokenType UserIdentifyToken::type() const
   {
     UserIdentifyTokenType type = UserIdentifyTokenType::ANONYMOUS;
-    if(Header.TypeID.FourByteData.Identifier == USER_IDENTIFY_TOKEN_USERNAME)
+    if(Header.TypeID.Data.FourByteData.Identifier == USER_IDENTIFY_TOKEN_USERNAME)
       type = UserIdentifyTokenType::USERNAME;
     return type;
   }
 
   void UserIdentifyToken::setUser(const std::string &user, const std::string &password)
   {
-    Header.TypeID.FourByteData.Identifier = USER_IDENTIFY_TOKEN_USERNAME;
+    Header.TypeID.Data.FourByteData.Identifier = USER_IDENTIFY_TOKEN_USERNAME;
     UserName.UserName = user;
     UserName.Password = password;
     //UserName.EncryptionAlgorithm = "http://www.w3.org/2001/04/xmlenc#rsa-oaep";

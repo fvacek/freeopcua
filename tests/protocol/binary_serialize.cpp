@@ -522,8 +522,8 @@ TEST_F(OpcUaBinarySerialization, AdditionalHeader)
   using namespace OpcUa::Binary;
   AdditionalHeader header;
   header.TypeID.Encoding = static_cast<NodeIDEncoding>(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_SERVER_INDEX_FLAG);
-  header.TypeID.StringData.NamespaceIndex = 0x1;
-  header.TypeID.StringData.Identifier = "id";
+  header.TypeID.Data.StringData.NamespaceIndex = 0x1;
+  header.TypeID.Data.StringData.Identifier = "id";
   header.TypeID.NamespaceURI = "uri";
   header.TypeID.ServerIndex = 1;
   header.Encoding = 1;
@@ -820,8 +820,8 @@ TEST_F(OpcUaBinarySerialization, OpenSecureChannelResponse)
   OpenSecureChannelResponse response;
 
   ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::OPEN_SECURE_CHANNEL_RESPONSE);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.Identifier, OpcUa::OPEN_SECURE_CHANNEL_RESPONSE);
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
@@ -865,8 +865,8 @@ TEST_F(OpcUaBinarySerialization, CloseSequreChannelRequest)
   CloseSecureChannelRequest request;
 
   ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::CLOSE_SECURE_CHANNEL_REQUEST);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.Identifier, OpcUa::CLOSE_SECURE_CHANNEL_REQUEST);
 
   FILL_TEST_REQUEST_HEADER(request.Header);
   

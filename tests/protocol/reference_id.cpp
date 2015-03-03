@@ -17,7 +17,7 @@ TEST(ReferenceIDFromNodeID, CanBeConvertedFromValidNodeID)
 {
   NodeID id(ReferenceID::HasChild);
   ASSERT_EQ(id.Encoding, EV_NUMERIC);
-  ASSERT_EQ(id.NumericData.NamespaceIndex, 0);
-  ASSERT_EQ(static_cast<ReferenceID>(id.NumericData.Identifier), ReferenceID::HasChild);
+  ASSERT_EQ(id.Data.NumericData.NamespaceIndex, 0);
+  ASSERT_EQ(static_cast<ReferenceID>(id.Data.NumericData.Identifier), ReferenceID::HasChild);
 }
 

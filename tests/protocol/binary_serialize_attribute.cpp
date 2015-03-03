@@ -112,7 +112,7 @@ TEST_F(OpcUaBinarySerialization, AttributeValueID)
   AttributeValueID attr;
 
   attr.Node.Encoding = EV_TWO_BYTE;
-  attr.Node.TwoByteData.Identifier = 1;
+  attr.Node.Data.TwoByteData.Identifier = 1;
   attr.Attribute = AttributeID::Value;
   attr.IndexRange = "1,2";
   attr.DataEncoding.NamespaceIndex = 2;
@@ -152,7 +152,7 @@ TEST_F(OpcUaBinaryDeserialization, AttributeValueID)
   GetStream() >> attr;
   
   ASSERT_EQ(attr.Node.Encoding, EV_TWO_BYTE);
-  ASSERT_EQ(attr.Node.TwoByteData.Identifier, 1);
+  ASSERT_EQ(attr.Node.Data.TwoByteData.Identifier, 1);
   ASSERT_EQ(attr.Attribute, AttributeID::Value);
   ASSERT_EQ(attr.DataEncoding.NamespaceIndex, 2);
   ASSERT_EQ(attr.DataEncoding.Name, "test");
@@ -168,7 +168,7 @@ OpcUa::AttributeValueID CreateAttributeValueID()
   OpcUa::AttributeValueID attr;
 
   attr.Node.Encoding = OpcUa::EV_TWO_BYTE;
-  attr.Node.TwoByteData.Identifier = 1;
+  attr.Node.Data.TwoByteData.Identifier = 1;
   attr.Attribute = OpcUa::AttributeID::Value;
   attr.IndexRange = "1,2";
   attr.DataEncoding.NamespaceIndex = 2;
@@ -185,8 +185,8 @@ TEST_F(OpcUaBinarySerialization, ReadRequest)
   ReadRequest request;
 
   ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::READ_REQUEST);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.Identifier, OpcUa::READ_REQUEST);
 
   FILL_TEST_REQUEST_HEADER(request.Header);
 
@@ -246,8 +246,8 @@ TEST_F(OpcUaBinaryDeserialization, ReadRequest)
   GetStream() >> request;
 
   ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::READ_REQUEST);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.Identifier, OpcUa::READ_REQUEST);
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
@@ -259,7 +259,7 @@ TEST_F(OpcUaBinaryDeserialization, ReadRequest)
   AttributeValueID attr = CreateAttributeValueID();
 
   ASSERT_EQ(request.Parameters.AttributesToRead[0].Node.Encoding, EV_TWO_BYTE);
-  ASSERT_EQ(request.Parameters.AttributesToRead[0].Node.TwoByteData.Identifier, 1);
+  ASSERT_EQ(request.Parameters.AttributesToRead[0].Node.Data.TwoByteData.Identifier, 1);
   ASSERT_EQ(request.Parameters.AttributesToRead[0].Attribute, OpcUa::AttributeID::Value);
   ASSERT_EQ(request.Parameters.AttributesToRead[0].DataEncoding.NamespaceIndex, 2);
   ASSERT_EQ(request.Parameters.AttributesToRead[0].DataEncoding.Name, "test");
@@ -279,8 +279,8 @@ TEST_F(OpcUaBinarySerialization, ReadResponse)
   ReadResponse resp;
 
   ASSERT_EQ(resp.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(resp.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(resp.TypeID.FourByteData.Identifier, OpcUa::READ_RESPONSE);
+  ASSERT_EQ(resp.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(resp.TypeID.Data.FourByteData.Identifier, OpcUa::READ_RESPONSE);
 
   FILL_TEST_RESPONSE_HEADER(resp.Header);
 
@@ -332,8 +332,8 @@ TEST_F(OpcUaBinaryDeserialization, ReadResponse_with_QualifiedName_as_value)
   GetStream() >> resp;
 
   ASSERT_EQ(resp.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(resp.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(resp.TypeID.FourByteData.Identifier, OpcUa::READ_RESPONSE);
+  ASSERT_EQ(resp.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(resp.TypeID.Data.FourByteData.Identifier, OpcUa::READ_RESPONSE);
 
   ASSERT_RESPONSE_HEADER_EQ(resp.Header);
   ASSERT_EQ(resp.Result.Results.size(), 1);
@@ -379,8 +379,8 @@ TEST_F(OpcUaBinaryDeserialization, ReadResponse)
   GetStream() >> resp;
 
   ASSERT_EQ(resp.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(resp.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(resp.TypeID.FourByteData.Identifier, OpcUa::READ_RESPONSE);
+  ASSERT_EQ(resp.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(resp.TypeID.Data.FourByteData.Identifier, OpcUa::READ_RESPONSE);
 
   ASSERT_RESPONSE_HEADER_EQ(resp.Header);
   ASSERT_EQ(resp.Result.Results.size(), 1);
@@ -397,7 +397,7 @@ TEST_F(OpcUaBinarySerialization, WriteValue)
 
   WriteValue value;
   value.Node.Encoding = EV_FOUR_BYTE;
-  value.Node.FourByteData.Identifier = 1;
+  value.Node.Data.FourByteData.Identifier = 1;
   value.Attribute = AttributeID::DisplayName;
   value.Data.Encoding = DATA_VALUE;
   value.Data.Value = true;
@@ -434,7 +434,7 @@ TEST_F(OpcUaBinaryDeserialization, WriteValue)
   GetStream() >> value;
 
   ASSERT_EQ(value.Node.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(value.Node.FourByteData.Identifier, 1);
+  ASSERT_EQ(value.Node.Data.FourByteData.Identifier, 1);
   ASSERT_EQ(value.Attribute, AttributeID::DisplayName);
   ASSERT_EQ(value.Data.Encoding, DATA_VALUE);
   ASSERT_EQ(value.Data.Value.Type(), VariantType::BOOLEAN);
@@ -455,14 +455,14 @@ TEST_F(OpcUaBinarySerialization, WriteRequest)
   WriteRequest request;
 
   ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::WRITE_REQUEST);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.Identifier, OpcUa::WRITE_REQUEST);
 
   FILL_TEST_REQUEST_HEADER(request.Header);
 
   WriteValue value;
   value.Node.Encoding = EV_FOUR_BYTE;
-  value.Node.FourByteData.Identifier = 1;
+  value.Node.Data.FourByteData.Identifier = 1;
   value.Attribute = AttributeID::DisplayName;
   value.Data.Encoding = DATA_VALUE;
   value.Data.Value = true;
@@ -514,15 +514,15 @@ TEST_F(OpcUaBinaryDeserialization, WriteRequest)
 
 
   ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::WRITE_REQUEST);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.Identifier, OpcUa::WRITE_REQUEST);
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
 
   ASSERT_EQ(request.Parameters.NodesToWrite.size(), 1);
   ASSERT_EQ(request.Parameters.NodesToWrite[0].Node.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.Parameters.NodesToWrite[0].Node.FourByteData.Identifier, 1);
+  ASSERT_EQ(request.Parameters.NodesToWrite[0].Node.Data.FourByteData.Identifier, 1);
   ASSERT_EQ(request.Parameters.NodesToWrite[0].Attribute, AttributeID::DisplayName);
   ASSERT_EQ(request.Parameters.NodesToWrite[0].Data.Encoding, DATA_VALUE);
   ASSERT_EQ(request.Parameters.NodesToWrite[0].Data.Value.Type(), VariantType::BOOLEAN);
@@ -541,8 +541,8 @@ TEST_F(OpcUaBinarySerialization, WriteResponse)
   WriteResponse resp;
 
   ASSERT_EQ(resp.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(resp.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(resp.TypeID.FourByteData.Identifier, OpcUa::WRITE_RESPONSE);
+  ASSERT_EQ(resp.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(resp.TypeID.Data.FourByteData.Identifier, OpcUa::WRITE_RESPONSE);
 
   FILL_TEST_RESPONSE_HEADER(resp.Header);
 
@@ -588,8 +588,8 @@ TEST_F(OpcUaBinaryDeserialization, WriteResponse)
 
 
   ASSERT_EQ(resp.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(resp.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(resp.TypeID.FourByteData.Identifier, OpcUa::WRITE_RESPONSE);
+  ASSERT_EQ(resp.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(resp.TypeID.Data.FourByteData.Identifier, OpcUa::WRITE_RESPONSE);
 
   ASSERT_RESPONSE_HEADER_EQ(resp.Header);
 

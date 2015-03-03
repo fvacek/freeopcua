@@ -610,8 +610,8 @@ TEST_F(OpcUaBinaryDeserialization, AdditionalHeader)
   GetStream() >> header;
 
   ASSERT_EQ(header.TypeID.Encoding, uint8_t(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_SERVER_INDEX_FLAG));
-  ASSERT_EQ(header.TypeID.StringData.NamespaceIndex, 0x1);
-  ASSERT_EQ(header.TypeID.StringData.Identifier, "id");
+  ASSERT_EQ(header.TypeID.Data.StringData.NamespaceIndex, 0x1);
+  ASSERT_EQ(header.TypeID.Data.StringData.Identifier, "id");
   ASSERT_EQ(header.TypeID.NamespaceURI, "uri");
   ASSERT_EQ(header.TypeID.ServerIndex, 1);
   ASSERT_EQ(header.Encoding, 1);
@@ -646,14 +646,14 @@ TEST_F(OpcUaBinaryDeserialization, RequestHeader)
   GetStream() >> header;
 
   ASSERT_EQ(header.SessionAuthenticationToken.Encoding, EV_TWO_BYTE);
-  ASSERT_EQ(header.SessionAuthenticationToken.TwoByteData.Identifier, 1);
+  ASSERT_EQ(header.SessionAuthenticationToken.Data.TwoByteData.Identifier, 1);
   ASSERT_EQ(header.UtcTime, 2);
   ASSERT_EQ(header.RequestHandle, 3);
   ASSERT_EQ(header.ReturnDiagnostics, 4);
   ASSERT_EQ(header.AuditEntryID, "audit");
   ASSERT_EQ(header.Timeout, 5); // in miliseconds
   ASSERT_EQ(header.Additional.TypeID.Encoding, EV_TWO_BYTE);
-  ASSERT_EQ(header.Additional.TypeID.TwoByteData.Identifier, 6);
+  ASSERT_EQ(header.Additional.TypeID.Data.TwoByteData.Identifier, 6);
   ASSERT_EQ(header.Additional.Encoding, 8);
 
   ASSERT_EQ(expectedData.size(), Binary::RawSize(header));
@@ -904,8 +904,8 @@ TEST_F(OpcUaBinaryDeserialization, OpenSecureChannelResponse)
   GetStream() >> response;
 
   ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::OPEN_SECURE_CHANNEL_RESPONSE);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.Identifier, OpcUa::OPEN_SECURE_CHANNEL_RESPONSE);
 
   ASSERT_RESPONSE_HEADER_EQ(response.Header);
 
@@ -983,8 +983,8 @@ TEST_F(OpcUaBinaryDeserialization, ExtensionObjectHeader)
   GetStream() >> header;
   
   ASSERT_EQ(header.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(header.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(header.TypeID.FourByteData.Identifier, OpcUa::USER_IDENTIFY_TOKEN_ANONYMOUS);
+  ASSERT_EQ(header.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(header.TypeID.Data.FourByteData.Identifier, OpcUa::USER_IDENTIFY_TOKEN_ANONYMOUS);
   ASSERT_EQ(header.Encoding, HAS_BINARY_BODY);
 }
 

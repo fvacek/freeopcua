@@ -100,8 +100,8 @@ TEST_F(SubscriptionSerialization, CreateSubscriptionRequest)
   CreateSubscriptionRequest request;
 
   ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::CREATE_SUBSCRIPTION_REQUEST);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.Identifier, OpcUa::CREATE_SUBSCRIPTION_REQUEST);
 
   FILL_TEST_REQUEST_HEADER(request.Header);
 
@@ -157,8 +157,8 @@ TEST_F(SubscriptionDeserialization, CreateSubscriptionRequest)
   GetStream() >> request;
 
   ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::CREATE_SUBSCRIPTION_REQUEST);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.Identifier, OpcUa::CREATE_SUBSCRIPTION_REQUEST);
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
@@ -233,8 +233,8 @@ TEST_F(SubscriptionSerialization, CreateSubscriptionResponse)
   CreateSubscriptionResponse response;
 
   ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::CREATE_SUBSCRIPTION_RESPONSE);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.Identifier, OpcUa::CREATE_SUBSCRIPTION_RESPONSE);
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
@@ -284,8 +284,8 @@ TEST_F(SubscriptionDeserialization, CreateSubscriptionResponse)
   GetStream() >> response;
 
   ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::CREATE_SUBSCRIPTION_RESPONSE);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.Identifier, OpcUa::CREATE_SUBSCRIPTION_RESPONSE);
 
   ASSERT_RESPONSE_HEADER_EQ(response.Header);
 
@@ -398,8 +398,8 @@ TEST_F(SubscriptionSerialization, PublishRequest)
   PublishRequest request;
 
   ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::PUBLISH_REQUEST);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.Identifier, OpcUa::PUBLISH_REQUEST);
 
   FILL_TEST_REQUEST_HEADER(request.Header);
 
@@ -450,8 +450,8 @@ TEST_F(SubscriptionDeserialization, PublishRequest)
   GetStream() >> request;
 
   ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::PUBLISH_REQUEST);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.Identifier, OpcUa::PUBLISH_REQUEST);
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
@@ -625,8 +625,8 @@ TEST_F(SubscriptionSerialization, PublishResponse)
   PublishResponse response;
 
   ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::PUBLISH_RESPONSE);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.Identifier, OpcUa::PUBLISH_RESPONSE);
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
@@ -691,8 +691,8 @@ TEST_F(SubscriptionSerialization, PublishResponse_Empty)
   PublishResponse response;
 
   ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::PUBLISH_RESPONSE);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.Identifier, OpcUa::PUBLISH_RESPONSE);
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
@@ -770,8 +770,8 @@ TEST_F(SubscriptionDeserialization, PublishResponse)
   GetStream() >> response;
 
   ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::PUBLISH_RESPONSE);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.Identifier, OpcUa::PUBLISH_RESPONSE);
 
   ASSERT_RESPONSE_HEADER_EQ(response.Header);
 
@@ -855,8 +855,8 @@ TEST_F(SubscriptionSerialization, SetPublishingModeRequest)
   SetPublishingModeRequest request;
 
   ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::SET_PUBLISHING_MODE_REQUEST);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.Identifier, OpcUa::SET_PUBLISHING_MODE_REQUEST);
 
   FILL_TEST_REQUEST_HEADER(request.Header);
 
@@ -904,8 +904,8 @@ TEST_F(SubscriptionDeserialization, SetPublishingModeRequest)
   GetStream() >> request;
 
   ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::SET_PUBLISHING_MODE_REQUEST);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.Identifier, OpcUa::SET_PUBLISHING_MODE_REQUEST);
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
@@ -990,8 +990,8 @@ TEST_F(SubscriptionSerialization, SetPublishingModeResponse)
   SetPublishingModeResponse response;
 
   ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::SET_PUBLISHING_MODE_RESPONSE);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.Identifier, OpcUa::SET_PUBLISHING_MODE_RESPONSE);
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
@@ -1022,8 +1022,8 @@ TEST_F(SubscriptionSerialization, SetPublishingModeResponse_Empty)
   SetPublishingModeResponse response;
 
   ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::SET_PUBLISHING_MODE_RESPONSE);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.Identifier, OpcUa::SET_PUBLISHING_MODE_RESPONSE);
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
@@ -1065,8 +1065,8 @@ TEST_F(SubscriptionDeserialization, SetPublishingModeResponse)
   GetStream() >> response;
 
   ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::SET_PUBLISHING_MODE_RESPONSE);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.Identifier, OpcUa::SET_PUBLISHING_MODE_RESPONSE);
 
   ASSERT_RESPONSE_HEADER_EQ(response.Header);
 

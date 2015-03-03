@@ -222,7 +222,7 @@ protected:
   header.InnerDiagnostics.InnerDiagnostics->AdditionalInfo = "add"; \
   header.StringTable = std::vector<std::string>(2, std::string("str")); \
   header.Additional.TypeID.Encoding = EV_TWO_BYTE; \
-  header.Additional.TypeID.TwoByteData.Identifier = 7; \
+  header.Additional.TypeID.Data.TwoByteData.Identifier = 7; \
   header.Additional.Encoding = 8;
 
 #define ASSERT_RESPONSE_HEADER_EQ(header) \
@@ -236,7 +236,7 @@ protected:
   ASSERT_EQ(header.InnerDiagnostics.InnerDiagnostics->AdditionalInfo, "add"); \
   ASSERT_EQ(header.StringTable, std::vector<std::string>(2, std::string("str"))); \
   ASSERT_EQ(header.Additional.TypeID.Encoding, EV_TWO_BYTE); \
-  ASSERT_EQ(header.Additional.TypeID.TwoByteData.Identifier, 7); \
+  ASSERT_EQ(header.Additional.TypeID.Data.TwoByteData.Identifier, 7); \
   ASSERT_EQ(header.Additional.Encoding, 8);
 
 
@@ -254,26 +254,26 @@ protected:
 
 #define FILL_TEST_REQUEST_HEADER(header) \
   header.SessionAuthenticationToken.Encoding = EV_TWO_BYTE; \
-  header.SessionAuthenticationToken.TwoByteData.Identifier = 1; \
+  header.SessionAuthenticationToken.Data.TwoByteData.Identifier = 1; \
   header.UtcTime.Value = 2; \
   header.RequestHandle = 3; \
   header.ReturnDiagnostics = 4; \
   header.AuditEntryID = "audit"; \
   header.Timeout = 5; \
   header.Additional.TypeID.Encoding = EV_TWO_BYTE; \
-  header.Additional.TypeID.TwoByteData.Identifier = 6; \
+  header.Additional.TypeID.Data.TwoByteData.Identifier = 6; \
   header.Additional.Encoding = 8;
 
 #define ASSERT_REQUEST_HEADER_EQ(header) \
   ASSERT_EQ(header.SessionAuthenticationToken.Encoding, EV_TWO_BYTE); \
-  ASSERT_EQ(header.SessionAuthenticationToken.TwoByteData.Identifier, 1); \
+  ASSERT_EQ(header.SessionAuthenticationToken.Data.TwoByteData.Identifier, 1); \
   ASSERT_EQ(header.UtcTime.Value, 2); \
   ASSERT_EQ(header.RequestHandle, 3); \
   ASSERT_EQ(header.ReturnDiagnostics, 4); \
   ASSERT_EQ(header.AuditEntryID, "audit"); \
   ASSERT_EQ(header.Timeout, 5); \
   ASSERT_EQ(header.Additional.TypeID.Encoding, EV_TWO_BYTE); \
-  ASSERT_EQ(header.Additional.TypeID.TwoByteData.Identifier, 6); \
+  ASSERT_EQ(header.Additional.TypeID.Data.TwoByteData.Identifier, 6); \
   ASSERT_EQ(header.Additional.Encoding, 8);
 
 

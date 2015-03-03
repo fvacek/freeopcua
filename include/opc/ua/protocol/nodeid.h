@@ -47,77 +47,86 @@ namespace OpcUa
     std::string NamespaceURI;
     uint32_t ServerIndex;
 
-    struct TwoByteDataType
+    union DataType
     {
-      uint8_t Identifier;
-
-      TwoByteDataType()
-        : Identifier(0)
+      struct TwoByteDataType
       {
-      }
+        uint8_t Identifier;
 
-    } TwoByteData;
+        TwoByteDataType()
+          : Identifier(0)
+        {
+        }
 
-    struct FourByteDataType
-    {
-      uint8_t NamespaceIndex;
-      uint16_t Identifier;
+      } TwoByteData;
 
-      FourByteDataType()
-        : NamespaceIndex(0)
-        , Identifier(0)
+      struct FourByteDataType
       {
-      }
-    }FourByteData;
+        uint8_t NamespaceIndex;
+        uint16_t Identifier;
 
-    struct NumericDataType
-    {
-      uint16_t NamespaceIndex;
-      uint32_t Identifier;
+        FourByteDataType()
+          : NamespaceIndex(0)
+          , Identifier(0)
+        {
+        }
+      }FourByteData;
 
-      NumericDataType()
-        : NamespaceIndex(0)
-        , Identifier(0)
+      struct NumericDataType
       {
-      }
-    }NumericData;
+        uint16_t NamespaceIndex;
+        uint32_t Identifier;
+
+        NumericDataType()
+          : NamespaceIndex(0)
+          , Identifier(0)
+        {
+        }
+      }NumericData;
 
 
-    struct StringDataType
-    {
-      uint16_t NamespaceIndex;
-      std::string Identifier;
-
-      StringDataType()
-        : NamespaceIndex(0)
+      struct StringDataType
       {
-      }
+        uint16_t NamespaceIndex;
+        std::string Identifier;
 
-    }StringData;
+        StringDataType()
+          : NamespaceIndex(0)
+        {
+        }
 
-    struct BinaryDataType
-    {
-      uint16_t NamespaceIndex;
-      std::vector<uint8_t> Identifier;
+      }StringData;
 
-      BinaryDataType()
-        : NamespaceIndex(0)
+      struct BinaryDataType
       {
-      }
+        uint16_t NamespaceIndex;
+        std::vector<uint8_t> Identifier;
 
-    }BinaryData;
+        BinaryDataType()
+          : NamespaceIndex(0)
+        {
+        }
 
-    struct GuidDataType
-    {
-      uint16_t NamespaceIndex;
-      Guid Identifier;
+      }BinaryData;
 
-      GuidDataType()
-        : NamespaceIndex(0)
+      struct GuidDataType
       {
-      }
+        uint16_t NamespaceIndex;
+        Guid Identifier;
 
-    }GuidData;
+        GuidDataType()
+          : NamespaceIndex(0)
+        {
+        }
+
+      }GuidData;
+
+      DataType() {}
+      DataType(const std::string &stringId, uint16_t index);
+      DataType(const std::vector<uint8_t> &identifier, uint16_t index);
+      ~DataType() {}
+
+    } Data;
 
     NodeID();
     NodeID(const NodeID& node);
@@ -128,6 +137,7 @@ namespace OpcUa
     NodeID(ExpandedObjectID objectID);
     NodeID(uint32_t integerId, uint16_t index);
     NodeID(std::string stringId, uint16_t index);
+    ~NodeID();
 
     NodeID& operator= (const NodeID& node);
     NodeID& operator= (const ExpandedNodeID& node);
@@ -200,7 +210,7 @@ namespace OpcUa
   {
     NodeID id;
     id.Encoding = EV_TWO_BYTE;
-    id.TwoByteData.Identifier = value;
+    id.Data.TwoByteData.Identifier = value;
     return id;
   }
 
@@ -208,8 +218,8 @@ namespace OpcUa
   {
     NodeID id;
     id.Encoding = EV_FOUR_BYTE;
-    id.FourByteData.Identifier = value;
-    id.FourByteData.NamespaceIndex = namespaceIndex;
+    id.Data.FourByteData.Identifier = value;
+    id.Data.FourByteData.NamespaceIndex = namespaceIndex;
     return id;
   }
 
@@ -217,8 +227,8 @@ namespace OpcUa
   {
     NodeID id;
     id.Encoding = EV_NUMERIC;
-    id.NumericData.Identifier = value;
-    id.NumericData.NamespaceIndex = namespaceIndex;
+    id.Data.NumericData.Identifier = value;
+    id.Data.NumericData.NamespaceIndex = namespaceIndex;
     return id;
   }
 
@@ -226,8 +236,8 @@ namespace OpcUa
   {
     NodeID id;
     id.Encoding = EV_STRING;
-    id.StringData.Identifier = value;
-    id.StringData.NamespaceIndex = namespaceIndex;
+    id.Data.StringData.Identifier = value;
+    id.Data.StringData.NamespaceIndex = namespaceIndex;
     return id;
   }
 
@@ -235,8 +245,8 @@ namespace OpcUa
   {
     NodeID id;
     id.Encoding = EV_BYTE_STRING;
-    id.BinaryData.Identifier = value;
-    id.BinaryData.NamespaceIndex = namespaceIndex;
+    id.Data.BinaryData.Identifier = value;
+    id.Data.BinaryData.NamespaceIndex = namespaceIndex;
     return id;
   }
 
@@ -244,8 +254,8 @@ namespace OpcUa
   {
     NodeID id;
     id.Encoding = EV_GUID;
-    id.GuidData.Identifier = value;
-    id.GuidData.NamespaceIndex = namespaceIndex;
+    id.Data.GuidData.Identifier = value;
+    id.Data.GuidData.NamespaceIndex = namespaceIndex;
     return id;
   }
 

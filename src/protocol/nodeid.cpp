@@ -24,15 +24,23 @@ namespace OpcUa
   NodeID::NodeID(uint32_t integerId, uint16_t index)
   {
     Encoding = EV_NUMERIC;
-    NumericData.Identifier = integerId;
-    NumericData.NamespaceIndex = index;
+    Data.NumericData.Identifier = integerId;
+    Data.NumericData.NamespaceIndex = index;
   }
 
   NodeID::NodeID(std::string stringId, uint16_t index)
+    : Encoding(EV_STRING), Data(stringId, index)
   {
-    Encoding = EV_STRING;
-    StringData.Identifier = stringId;
-    StringData.NamespaceIndex = index;
+  }
+
+  NodeID::~NodeID()
+  {
+    if(Encoding & EV_STRING) {
+      Data.StringData.Identifier.~basic_string();
+    }
+    else if(Encoding & EV_BYTE_STRING) {
+      Data.BinaryData.Identifier.~vector();
+    }
   }
 
   bool NodeID::IsInteger() const
@@ -63,7 +71,7 @@ namespace OpcUa
   {
     if (IsString())
     {
-      return StringData.Identifier;
+      return Data.StringData.Identifier;
     }
     throw std::logic_error("Node id is not in String format.");
   }
@@ -72,7 +80,7 @@ namespace OpcUa
   {
     if (IsBinary())
     {
-      return BinaryData.Identifier;
+      return Data.BinaryData.Identifier;
     }
     throw std::logic_error("Node id is not in String format.");
   }
@@ -81,7 +89,7 @@ namespace OpcUa
   {
     if (IsGuid())
     {
-      return GuidData.Identifier;
+      return Data.GuidData.Identifier;
     }
     throw std::logic_error("Node id is not in String format.");
   }
@@ -92,15 +100,15 @@ namespace OpcUa
     {
       case EV_TWO_BYTE:
       {
-        return TwoByteData.Identifier;
+        return Data.TwoByteData.Identifier;
       }
       case EV_FOUR_BYTE:
       {
-        return FourByteData.Identifier;
+        return Data.FourByteData.Identifier;
       }
       case EV_NUMERIC:
       {
-        return NumericData.Identifier;
+        return Data.NumericData.Identifier;
       }
       default:
       {
@@ -114,15 +122,15 @@ namespace OpcUa
     switch (GetEncodingValue())
     {
       case EV_FOUR_BYTE:
-        return FourByteData.NamespaceIndex;
+        return Data.FourByteData.NamespaceIndex;
       case EV_NUMERIC:
-        return NumericData.NamespaceIndex;
+        return Data.NumericData.NamespaceIndex;
       case EV_STRING:
-        return StringData.NamespaceIndex;
+        return Data.StringData.NamespaceIndex;
       case EV_GUID:
-        return GuidData.NamespaceIndex;
+        return Data.GuidData.NamespaceIndex;
       case EV_BYTE_STRING:
-        return BinaryData.NamespaceIndex;
+        return Data.BinaryData.NamespaceIndex;
       default:
         return 0;
     }
@@ -133,19 +141,19 @@ namespace OpcUa
     switch (GetEncodingValue())
     {
       case EV_FOUR_BYTE:
-        FourByteData.NamespaceIndex = ns;
+        Data.FourByteData.NamespaceIndex = ns;
         return;
       case EV_NUMERIC:
-        NumericData.NamespaceIndex = ns;
+        Data.NumericData.NamespaceIndex = ns;
         return;
       case EV_STRING:
-        StringData.NamespaceIndex = ns;
+        Data.StringData.NamespaceIndex = ns;
         return;
       case EV_GUID:
-        GuidData.NamespaceIndex = ns;
+        Data.GuidData.NamespaceIndex = ns;
         return;
       case EV_BYTE_STRING:
-        BinaryData.NamespaceIndex = ns;
+        Data.BinaryData.NamespaceIndex = ns;
         return;
       default:
         return;
@@ -166,37 +174,37 @@ namespace OpcUa
     {
       case EV_TWO_BYTE:
       {
-        TwoByteData.Identifier = node.TwoByteData.Identifier;
+        Data.TwoByteData.Identifier = node.Data.TwoByteData.Identifier;
         break;
       }
       case EV_FOUR_BYTE:
       {
-        FourByteData.NamespaceIndex = node.FourByteData.NamespaceIndex;
-        FourByteData.Identifier = node.FourByteData.Identifier;
+        Data.FourByteData.NamespaceIndex = node.Data.FourByteData.NamespaceIndex;
+        Data.FourByteData.Identifier = node.Data.FourByteData.Identifier;
         break;
       }
       case EV_NUMERIC:
       {
-        NumericData.NamespaceIndex = node.NumericData.NamespaceIndex;
-        NumericData.Identifier = node.NumericData.Identifier;
+        Data.NumericData.NamespaceIndex = node.Data.NumericData.NamespaceIndex;
+        Data.NumericData.Identifier = node.Data.NumericData.Identifier;
         break;
       }
       case EV_STRING:
       {
-        StringData.NamespaceIndex = node.StringData.NamespaceIndex;
-        StringData.Identifier = node.StringData.Identifier;
+        Data.StringData.NamespaceIndex = node.Data.StringData.NamespaceIndex;
+        Data.StringData.Identifier = node.Data.StringData.Identifier;
         break;
       }
       case EV_GUID:
       {
-        GuidData.NamespaceIndex = node.GuidData.NamespaceIndex;
-        GuidData.Identifier = node.GuidData.Identifier;
+        Data.GuidData.NamespaceIndex = node.Data.GuidData.NamespaceIndex;
+        Data.GuidData.Identifier = node.Data.GuidData.Identifier;
         break;
       }
       case EV_BYTE_STRING:
       {
-        BinaryData.NamespaceIndex = node.BinaryData.NamespaceIndex;
-        BinaryData.Identifier = node.BinaryData.Identifier;
+        Data.BinaryData.NamespaceIndex = node.Data.BinaryData.NamespaceIndex;
+        Data.BinaryData.Identifier = node.Data.BinaryData.Identifier;
         break;
       }
       default:
@@ -250,28 +258,28 @@ namespace OpcUa
     : Encoding(EV_FOUR_BYTE)
     , ServerIndex(0)
   {
-    FourByteData.Identifier = messageID;
+    Data.FourByteData.Identifier = messageID;
   }
 
   NodeID::NodeID(ReferenceID referenceID)
     : Encoding(EV_NUMERIC)
     , ServerIndex(0)
   {
-    NumericData.Identifier = static_cast<uint32_t>(referenceID);
+    Data.NumericData.Identifier = static_cast<uint32_t>(referenceID);
   }
 
   NodeID::NodeID(ObjectID objectID)
     : Encoding(EV_NUMERIC)
     , ServerIndex(0)
   {
-    NumericData.Identifier = static_cast<uint32_t>(objectID);
+    Data.NumericData.Identifier = static_cast<uint32_t>(objectID);
   }
 
   NodeID::NodeID(ExpandedObjectID objectID)
     : Encoding(EV_FOUR_BYTE)
     , ServerIndex(0)
   {
-    FourByteData.Identifier = static_cast<uint32_t>(objectID);
+    Data.FourByteData.Identifier = static_cast<uint32_t>(objectID);
   }
 
   MessageID GetMessageID(const NodeID& id)
@@ -418,15 +426,15 @@ namespace OpcUa
   ExpandedNodeID::ExpandedNodeID(uint32_t integerId, uint16_t index)
   {
     Encoding = EV_NUMERIC;
-    NumericData.Identifier = integerId;
-    NumericData.NamespaceIndex = index;
+    Data.NumericData.Identifier = integerId;
+    Data.NumericData.NamespaceIndex = index;
   }
 
   ExpandedNodeID::ExpandedNodeID(std::string stringId, uint16_t index)
   {
     Encoding = EV_STRING;
-    StringData.Identifier = stringId;
-    StringData.NamespaceIndex = index;
+    Data.StringData.Identifier = stringId;
+    Data.StringData.NamespaceIndex = index;
   }
 
   ExpandedNodeID::ExpandedNodeID(const NodeID& node)
@@ -444,28 +452,28 @@ namespace OpcUa
   {
     Encoding = EV_FOUR_BYTE;
     ServerIndex = 0;
-    FourByteData.Identifier = messageID;
+    Data.FourByteData.Identifier = messageID;
   }
 
   ExpandedNodeID::ExpandedNodeID(ReferenceID referenceID)
   {
     Encoding = EV_NUMERIC;
     ServerIndex = 0;
-    NumericData.Identifier = static_cast<uint32_t>(referenceID);
+    Data.NumericData.Identifier = static_cast<uint32_t>(referenceID);
   }
 
   ExpandedNodeID::ExpandedNodeID(ObjectID objectID)
   {
     Encoding = EV_NUMERIC;
     ServerIndex = 0;
-    NumericData.Identifier = static_cast<uint32_t>(objectID);
+    Data.NumericData.Identifier = static_cast<uint32_t>(objectID);
   }
 
   ExpandedNodeID::ExpandedNodeID(ExpandedObjectID objectID)
   {
     Encoding = EV_FOUR_BYTE;
     ServerIndex = 0;
-    FourByteData.Identifier = static_cast<uint32_t>(objectID);
+    Data.FourByteData.Identifier = static_cast<uint32_t>(objectID);
   }
 
 
@@ -521,7 +529,7 @@ namespace OpcUa
           const std::size_t sizeofEncoding = 1;
           const std::size_t sizeofSize = 4;
           const std::size_t sizeofNamespace = 2;
-          size = sizeofEncoding + sizeofNamespace + sizeofSize + id.StringData.Identifier.size();
+          size = sizeofEncoding + sizeofNamespace + sizeofSize + id.Data.StringData.Identifier.size();
           break;
         }
         case EV_BYTE_STRING:
@@ -529,7 +537,7 @@ namespace OpcUa
           const std::size_t sizeofEncoding = 1;
           const std::size_t sizeofSize = 4;
           const std::size_t sizeofNamespace = 2;
-          size = sizeofEncoding + sizeofNamespace + sizeofSize + id.BinaryData.Identifier.size();
+          size = sizeofEncoding + sizeofNamespace + sizeofSize + id.Data.BinaryData.Identifier.size();
           break;
         }
         case EV_GUID:
@@ -562,37 +570,37 @@ namespace OpcUa
       {
         case EV_TWO_BYTE:
         {
-          *this << id.TwoByteData.Identifier;
+          *this << id.Data.TwoByteData.Identifier;
           break;
         }
         case EV_FOUR_BYTE:
         {
-          *this << id.FourByteData.NamespaceIndex;
-          *this << id.FourByteData.Identifier;
+          *this << id.Data.FourByteData.NamespaceIndex;
+          *this << id.Data.FourByteData.Identifier;
           break;
         }
         case EV_NUMERIC:
         {
-          *this << id.NumericData.NamespaceIndex;
-          *this << id.NumericData.Identifier;
+          *this << id.Data.NumericData.NamespaceIndex;
+          *this << id.Data.NumericData.Identifier;
           break;
         }
         case EV_STRING:
         {
-          *this << id.StringData.NamespaceIndex;
-          *this << id.StringData.Identifier;
+          *this << id.Data.StringData.NamespaceIndex;
+          *this << id.Data.StringData.Identifier;
           break;
         }
         case EV_BYTE_STRING:
         {
-          *this << id.BinaryData.NamespaceIndex;
-          *this << id.BinaryData.Identifier;
+          *this << id.Data.BinaryData.NamespaceIndex;
+          *this << id.Data.BinaryData.Identifier;
           break;
         }
         case EV_GUID:
         {
-          *this << id.GuidData.NamespaceIndex;
-          *this << id.GuidData.Identifier;
+          *this << id.Data.GuidData.NamespaceIndex;
+          *this << id.Data.GuidData.Identifier;
           break;
         }
 
@@ -611,37 +619,37 @@ namespace OpcUa
       {
         case EV_TWO_BYTE:
         {
-          *this >> id.TwoByteData.Identifier;
+          *this >> id.Data.TwoByteData.Identifier;
           break;
         }
         case EV_FOUR_BYTE:
         {
-          *this >> id.FourByteData.NamespaceIndex;
-          *this >> id.FourByteData.Identifier;
+          *this >> id.Data.FourByteData.NamespaceIndex;
+          *this >> id.Data.FourByteData.Identifier;
           break;
         }
         case EV_NUMERIC:
         {
-          *this >> id.NumericData.NamespaceIndex;
-          *this >> id.NumericData.Identifier;
+          *this >> id.Data.NumericData.NamespaceIndex;
+          *this >> id.Data.NumericData.Identifier;
           break;
         }
         case EV_STRING:
         {
-          *this >> id.StringData.NamespaceIndex;
-          *this >> id.StringData.Identifier;
+          *this >> id.Data.StringData.NamespaceIndex;
+          *this >> id.Data.StringData.Identifier;
           break;
         }
         case EV_BYTE_STRING:
         {
-          *this >> id.BinaryData.NamespaceIndex;
-          *this >> id.BinaryData.Identifier;
+          *this >> id.Data.BinaryData.NamespaceIndex;
+          *this >> id.Data.BinaryData.Identifier;
           break;
         }
         case EV_GUID:
         {
-          *this >> id.GuidData.NamespaceIndex;
-          *this >> id.GuidData.Identifier;
+          *this >> id.Data.GuidData.NamespaceIndex;
+          *this >> id.Data.GuidData.Identifier;
           break;
         }
 
@@ -688,37 +696,37 @@ namespace OpcUa
       {
         case EV_TWO_BYTE:
         {
-          *this << id.TwoByteData.Identifier;
+          *this << id.Data.TwoByteData.Identifier;
           break;
         }
         case EV_FOUR_BYTE:
         {
-          *this << id.FourByteData.NamespaceIndex;
-          *this << id.FourByteData.Identifier;
+          *this << id.Data.FourByteData.NamespaceIndex;
+          *this << id.Data.FourByteData.Identifier;
           break;
         }
         case EV_NUMERIC:
         {
-          *this << id.NumericData.NamespaceIndex;
-          *this << id.NumericData.Identifier;
+          *this << id.Data.NumericData.NamespaceIndex;
+          *this << id.Data.NumericData.Identifier;
           break;
         }
         case EV_STRING:
         {
-          *this << id.StringData.NamespaceIndex;
-          *this << id.StringData.Identifier;
+          *this << id.Data.StringData.NamespaceIndex;
+          *this << id.Data.StringData.Identifier;
           break;
         }
         case EV_BYTE_STRING:
         {
-          *this << id.BinaryData.NamespaceIndex;
-          *this << id.BinaryData.Identifier;
+          *this << id.Data.BinaryData.NamespaceIndex;
+          *this << id.Data.BinaryData.Identifier;
           break;
         }
         case EV_GUID:
         {
-          *this << id.GuidData.NamespaceIndex;
-          *this << id.GuidData.Identifier;
+          *this << id.Data.GuidData.NamespaceIndex;
+          *this << id.Data.GuidData.Identifier;
           break;
         }
 
@@ -743,6 +751,20 @@ namespace OpcUa
     };
 
 
-  } // namespace Binary
+  }
+
+  NodeID::DataType::DataType(const std::string &stringId, uint16_t index)
+  {
+    StringData.NamespaceIndex = index;
+    StringData.Identifier = stringId;
+  }
+
+  NodeID::DataType::DataType(const std::vector<uint8_t> &identifier, uint16_t index)
+  {
+    BinaryData.NamespaceIndex = index;
+    BinaryData.Identifier = identifier;
+  }
+
+  // namespace Binary
 } // namespace OpcUa
 

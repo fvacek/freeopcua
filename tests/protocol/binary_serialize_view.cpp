@@ -78,7 +78,7 @@ TEST_F(ViewSerialization, ViewDescription)
   ViewDescription desc;
 
   desc.ID.Encoding = EV_TWO_BYTE;
-  desc.ID.TwoByteData.Identifier = 1;
+  desc.ID.Data.TwoByteData.Identifier = 1;
   desc.Timestamp.Value = 2;
   desc.Version = 3;
 
@@ -112,7 +112,7 @@ TEST_F(ViewDeserialization, ViewDescription)
   GetStream() >> desc;
 
   ASSERT_EQ(desc.ID.Encoding, EV_TWO_BYTE);
-  ASSERT_EQ(desc.ID.TwoByteData.Identifier, 1);
+  ASSERT_EQ(desc.ID.Data.TwoByteData.Identifier, 1);
   ASSERT_EQ(desc.Timestamp, 2);
   ASSERT_EQ(desc.Version, 3);
 }
@@ -130,10 +130,10 @@ TEST_F(ViewSerialization, BrowseDescription)
   BrowseDescription desc;
 
   desc.NodeToBrowse.Encoding = EV_TWO_BYTE;
-  desc.NodeToBrowse.TwoByteData.Identifier = 1;
+  desc.NodeToBrowse.Data.TwoByteData.Identifier = 1;
   desc.Direction = BrowseDirection::Inverse;
   desc.ReferenceTypeID.Encoding = EV_TWO_BYTE;
-  desc.ReferenceTypeID.TwoByteData.Identifier = 2;
+  desc.ReferenceTypeID.Data.TwoByteData.Identifier = 2;
   desc.IncludeSubtypes = true;
   desc.NodeClasses = NODE_CLASS_VARIABLE;
   desc.ResultMask = REFERENCE_NODE_CLASS;
@@ -174,10 +174,10 @@ TEST_F(ViewDeserialization, BrowseDescription)
   GetStream() >> desc;
 
   ASSERT_EQ(desc.NodeToBrowse.Encoding, EV_TWO_BYTE);
-  ASSERT_EQ(desc.NodeToBrowse.TwoByteData.Identifier, 1);
+  ASSERT_EQ(desc.NodeToBrowse.Data.TwoByteData.Identifier, 1);
   ASSERT_EQ(desc.Direction, BrowseDirection::Inverse);
   ASSERT_EQ(desc.ReferenceTypeID.Encoding, EV_TWO_BYTE);
-  ASSERT_EQ(desc.ReferenceTypeID.TwoByteData.Identifier, 2);
+  ASSERT_EQ(desc.ReferenceTypeID.Data.TwoByteData.Identifier, 2);
   ASSERT_EQ(desc.IncludeSubtypes, true);
   ASSERT_EQ(desc.NodeClasses, NODE_CLASS_VARIABLE);
   ASSERT_EQ(desc.ResultMask, REFERENCE_NODE_CLASS);
@@ -193,10 +193,10 @@ OpcUa::BrowseDescription CreateBrowseDescription()
   using namespace OpcUa::Binary;
   BrowseDescription desc;
   desc.NodeToBrowse.Encoding = EV_TWO_BYTE;
-  desc.NodeToBrowse.TwoByteData.Identifier = 1;
+  desc.NodeToBrowse.Data.TwoByteData.Identifier = 1;
   desc.Direction = BrowseDirection::Inverse;
   desc.ReferenceTypeID.Encoding = EV_TWO_BYTE;
-  desc.ReferenceTypeID.TwoByteData.Identifier = 2;
+  desc.ReferenceTypeID.Data.TwoByteData.Identifier = 2;
   desc.IncludeSubtypes = true;
   desc.NodeClasses = NODE_CLASS_VARIABLE;
   desc.ResultMask = REFERENCE_NODE_CLASS;
@@ -207,10 +207,10 @@ bool operator==(const OpcUa::BrowseDescription& lhs, const OpcUa::BrowseDescript
 {
   return
     rhs.NodeToBrowse.Encoding == lhs.NodeToBrowse.Encoding &&
-    rhs.NodeToBrowse.TwoByteData.Identifier == lhs.NodeToBrowse.TwoByteData.Identifier &&
+    rhs.NodeToBrowse.Data.TwoByteData.Identifier == lhs.NodeToBrowse.Data.TwoByteData.Identifier &&
     rhs.Direction == lhs.Direction &&
     rhs.ReferenceTypeID.Encoding == lhs.ReferenceTypeID.Encoding &&
-    rhs.ReferenceTypeID.TwoByteData.Identifier == lhs.ReferenceTypeID.TwoByteData.Identifier &&
+    rhs.ReferenceTypeID.Data.TwoByteData.Identifier == lhs.ReferenceTypeID.Data.TwoByteData.Identifier &&
     rhs.IncludeSubtypes == lhs.IncludeSubtypes &&
     rhs.NodeClasses == lhs.NodeClasses &&
     rhs.ResultMask == lhs.ResultMask;
@@ -225,13 +225,13 @@ TEST_F(ViewSerialization, BrowseRequest)
   BrowseRequest request;
 
   ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::BROWSE_REQUEST);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.Identifier, OpcUa::BROWSE_REQUEST);
 
   FILL_TEST_REQUEST_HEADER(request.Header);
 
   request.Query.View.ID.Encoding = EV_TWO_BYTE;
-  request.Query.View.ID.TwoByteData.Identifier = 1;
+  request.Query.View.ID.Data.TwoByteData.Identifier = 1;
   request.Query.View.Timestamp.Value = 2;
   request.Query.View.Version = 3;
 
@@ -292,13 +292,13 @@ TEST_F(ViewDeserialization, BrowseRequest)
   GetStream() >> request;
 
   ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::BROWSE_REQUEST);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.Identifier, OpcUa::BROWSE_REQUEST);
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
   ASSERT_EQ(request.Query.View.ID.Encoding, EV_TWO_BYTE);
-  ASSERT_EQ(request.Query.View.ID.TwoByteData.Identifier, 1);
+  ASSERT_EQ(request.Query.View.ID.Data.TwoByteData.Identifier, 1);
   ASSERT_EQ(request.Query.View.Timestamp, 2);
   ASSERT_EQ(request.Query.View.Version, 3);
 
@@ -326,12 +326,12 @@ TEST_F(ViewSerialization, ReferenceDescription)
   ReferenceDescription desc;
 
   desc.ReferenceTypeID.Encoding = EV_TWO_BYTE;
-  desc.ReferenceTypeID.TwoByteData.Identifier = 1;
+  desc.ReferenceTypeID.Data.TwoByteData.Identifier = 1;
 
   desc.IsForward = true;
 
   desc.TargetNodeID.Encoding = EV_TWO_BYTE;
-  desc.TargetNodeID.TwoByteData.Identifier = 2;
+  desc.TargetNodeID.Data.TwoByteData.Identifier = 2;
 
   desc.BrowseName.NamespaceIndex = 3;
   desc.BrowseName.Name = "name";
@@ -343,7 +343,7 @@ TEST_F(ViewSerialization, ReferenceDescription)
   desc.TargetNodeClass = NodeClass::Method;
 
   desc.TargetNodeTypeDefinition.Encoding = EV_TWO_BYTE;
-  desc.TargetNodeTypeDefinition.TwoByteData.Identifier = 5;
+  desc.TargetNodeTypeDefinition.Data.TwoByteData.Identifier = 5;
 
 
   GetStream() << desc << flush;
@@ -389,12 +389,12 @@ TEST_F(ViewDeserialization, ReferenceDescription)
   GetStream() >> desc;
 
   ASSERT_EQ(desc.ReferenceTypeID.Encoding, EV_TWO_BYTE);
-  ASSERT_EQ(desc.ReferenceTypeID.TwoByteData.Identifier, 1);
+  ASSERT_EQ(desc.ReferenceTypeID.Data.TwoByteData.Identifier, 1);
 
   ASSERT_EQ(desc.IsForward, true);
 
   ASSERT_EQ(desc.TargetNodeID.Encoding, EV_TWO_BYTE);
-  ASSERT_EQ(desc.TargetNodeID.TwoByteData.Identifier, 2);
+  ASSERT_EQ(desc.TargetNodeID.Data.TwoByteData.Identifier, 2);
 
   ASSERT_EQ(desc.BrowseName.NamespaceIndex, 3);
   ASSERT_EQ(desc.BrowseName.Name, "name");
@@ -406,7 +406,7 @@ TEST_F(ViewDeserialization, ReferenceDescription)
   ASSERT_EQ(desc.TargetNodeClass, NodeClass::Method);
 
   ASSERT_EQ(desc.TargetNodeTypeDefinition.Encoding, EV_TWO_BYTE);
-  ASSERT_EQ(desc.TargetNodeTypeDefinition.TwoByteData.Identifier, 5);
+  ASSERT_EQ(desc.TargetNodeTypeDefinition.Data.TwoByteData.Identifier, 5);
 }
 
 //-------------------------------------------------------
@@ -420,12 +420,12 @@ OpcUa::ReferenceDescription CreateReferenceDescription()
   ReferenceDescription desc;
 
   desc.ReferenceTypeID.Encoding = EV_TWO_BYTE;
-  desc.ReferenceTypeID.TwoByteData.Identifier = 1;
+  desc.ReferenceTypeID.Data.TwoByteData.Identifier = 1;
 
   desc.IsForward = true;
 
   desc.TargetNodeID.Encoding = EV_TWO_BYTE;
-  desc.TargetNodeID.TwoByteData.Identifier = 2;
+  desc.TargetNodeID.Data.TwoByteData.Identifier = 2;
 
   desc.BrowseName.NamespaceIndex = 3;
   desc.BrowseName.Name = "name";
@@ -437,7 +437,7 @@ OpcUa::ReferenceDescription CreateReferenceDescription()
   desc.TargetNodeClass = NodeClass::Method;
 
   desc.TargetNodeTypeDefinition.Encoding = EV_TWO_BYTE;
-  desc.TargetNodeTypeDefinition.TwoByteData.Identifier = 5;
+  desc.TargetNodeTypeDefinition.Data.TwoByteData.Identifier = 5;
   return desc;
 }
 
@@ -507,10 +507,10 @@ TEST_F(ViewDeserialization, BrowseResult)
 
   const ReferenceDescription& desc = result.Referencies[0];
   ASSERT_EQ(desc.ReferenceTypeID.Encoding, EV_TWO_BYTE);
-  ASSERT_EQ(desc.ReferenceTypeID.TwoByteData.Identifier, 1);
+  ASSERT_EQ(desc.ReferenceTypeID.Data.TwoByteData.Identifier, 1);
   ASSERT_EQ(desc.IsForward, true);
   ASSERT_EQ(desc.TargetNodeID.Encoding, EV_TWO_BYTE);
-  ASSERT_EQ(desc.TargetNodeID.TwoByteData.Identifier, 2);
+  ASSERT_EQ(desc.TargetNodeID.Data.TwoByteData.Identifier, 2);
   ASSERT_EQ(desc.BrowseName.NamespaceIndex, 3);
   ASSERT_EQ(desc.BrowseName.Name, "name");
   ASSERT_EQ(desc.DisplayName.Encoding, HAS_LOCALE | HAS_TEXT);
@@ -518,7 +518,7 @@ TEST_F(ViewDeserialization, BrowseResult)
   ASSERT_EQ(desc.DisplayName.Text, "text");
   ASSERT_EQ(desc.TargetNodeClass, NodeClass::Method);
   ASSERT_EQ(desc.TargetNodeTypeDefinition.Encoding, EV_TWO_BYTE);
-  ASSERT_EQ(desc.TargetNodeTypeDefinition.TwoByteData.Identifier, 5);
+  ASSERT_EQ(desc.TargetNodeTypeDefinition.Data.TwoByteData.Identifier, 5);
 }
 
 //-------------------------------------------------------
@@ -542,8 +542,8 @@ TEST_F(ViewSerialization, BrowseResponse)
   BrowseResponse response;
 
   ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::BROWSE_RESPONSE);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.Identifier, OpcUa::BROWSE_RESPONSE);
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
@@ -630,8 +630,8 @@ TEST_F(ViewDeserialization, BrowseResponse)
   GetStream() >> response;
 
   ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::BROWSE_RESPONSE);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.Identifier, OpcUa::BROWSE_RESPONSE);
 
   ASSERT_RESPONSE_HEADER_EQ(response.Header);
 
@@ -652,8 +652,8 @@ TEST_F(ViewSerialization, BrowseNextRequest)
   BrowseNextRequest request;
 
   ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::BROWSE_NEXT_REQUEST);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.Identifier, OpcUa::BROWSE_NEXT_REQUEST);
 
   FILL_TEST_REQUEST_HEADER(request.Header);
 
@@ -695,8 +695,8 @@ TEST_F(ViewDeserialization, BrowseNextRequest)
   GetStream() >> request;
 
   ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::BROWSE_NEXT_REQUEST);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.Identifier, OpcUa::BROWSE_NEXT_REQUEST);
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 
@@ -717,8 +717,8 @@ TEST_F(ViewSerialization, BrowseNextResponse)
   BrowseNextResponse response;
 
   ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::BROWSE_NEXT_RESPONSE);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.Identifier, OpcUa::BROWSE_NEXT_RESPONSE);
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
@@ -803,8 +803,8 @@ TEST_F(ViewDeserialization, BrowseNextResponse)
   GetStream() >> response;
 
   ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::BROWSE_NEXT_RESPONSE);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.Identifier, OpcUa::BROWSE_NEXT_RESPONSE);
 
   ASSERT_RESPONSE_HEADER_EQ(response.Header);
 
@@ -824,7 +824,7 @@ TEST_F(ViewSerialization, BrowsePathTarget)
   BrowsePathTarget target;
 
   target.Node.Encoding = EV_TWO_BYTE;
-  target.Node.TwoByteData.Identifier = 1;
+  target.Node.Data.TwoByteData.Identifier = 1;
   target.RemainingPathIndex = 2;
 
   GetStream() << target << flush;
@@ -856,7 +856,7 @@ TEST_F(ViewDeserialization, BrowsePathTarget)
   GetStream() >> target;
 
   ASSERT_EQ(target.Node.Encoding, EV_TWO_BYTE);
-  ASSERT_EQ(target.Node.TwoByteData.Identifier, 1);
+  ASSERT_EQ(target.Node.Data.TwoByteData.Identifier, 1);
   ASSERT_EQ(target.RemainingPathIndex, 2);
 }
 
@@ -872,7 +872,7 @@ TEST_F(ViewSerialization, BrowsePathResult)
 
   BrowsePathTarget target;
   target.Node.Encoding = EV_TWO_BYTE;
-  target.Node.TwoByteData.Identifier = 1;
+  target.Node.Data.TwoByteData.Identifier = 1;
   target.RemainingPathIndex = 2;
 
   BrowsePathResult result;
@@ -914,7 +914,7 @@ TEST_F(ViewDeserialization, BrowsePathResult)
   ASSERT_EQ(result.Status, static_cast<StatusCode>(3));
   ASSERT_EQ(result.Targets.size(), 1);
   ASSERT_EQ(result.Targets[0].Node.Encoding, EV_TWO_BYTE);
-  ASSERT_EQ(result.Targets[0].Node.TwoByteData.Identifier, 1);
+  ASSERT_EQ(result.Targets[0].Node.Data.TwoByteData.Identifier, 1);
   ASSERT_EQ(result.Targets[0].RemainingPathIndex, 2);
 }
 
@@ -930,7 +930,7 @@ TEST_F(ViewSerialization, TranslateBrowsePathsResult)
 
   BrowsePathTarget target;
   target.Node.Encoding = EV_TWO_BYTE;
-  target.Node.TwoByteData.Identifier = 1;
+  target.Node.Data.TwoByteData.Identifier = 1;
   target.RemainingPathIndex = 2;
 
   BrowsePathResult result;
@@ -992,7 +992,7 @@ TEST_F(ViewSerialization, TranslateBrowsePathsToNodeIDsResponse)
 
   BrowsePathTarget target;
   target.Node.Encoding = EV_TWO_BYTE;
-  target.Node.TwoByteData.Identifier = 1;
+  target.Node.Data.TwoByteData.Identifier = 1;
   target.RemainingPathIndex = 2;
 
   BrowsePathResult result;
@@ -1003,8 +1003,8 @@ TEST_F(ViewSerialization, TranslateBrowsePathsToNodeIDsResponse)
   response.Result.Paths.push_back(result);
 
   ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::TRANSLATE_BROWSE_PATHS_TO_NODE_IDS_RESPONSE);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.Identifier, OpcUa::TRANSLATE_BROWSE_PATHS_TO_NODE_IDS_RESPONSE);
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
@@ -1069,8 +1069,8 @@ TEST_F(ViewDeserialization, TranslateBrowsePathsToNodeIDsResponse)
   GetStream() >> response;
 
   ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::TRANSLATE_BROWSE_PATHS_TO_NODE_IDS_RESPONSE);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.Identifier, OpcUa::TRANSLATE_BROWSE_PATHS_TO_NODE_IDS_RESPONSE);
 
   ASSERT_RESPONSE_HEADER_EQ(response.Header);
 
@@ -1102,8 +1102,8 @@ TEST_F(ViewSerialization, TranslateBrowsePathsToNodeIDsRequest)
   request.Parameters.BrowsePaths.push_back(browse);
 
   ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::TRANSLATE_BROWSE_PATHS_TO_NODE_IDS_REQUEST);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.Identifier, OpcUa::TRANSLATE_BROWSE_PATHS_TO_NODE_IDS_REQUEST);
 
   FILL_TEST_REQUEST_HEADER(request.Header);
 
@@ -1154,8 +1154,8 @@ TEST_F(ViewDeserialization, TranslateBrowsePathsToNodeIDsRequest)
   GetStream() >> request;
 
   ASSERT_EQ(request.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(request.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(request.TypeID.FourByteData.Identifier, OpcUa::TRANSLATE_BROWSE_PATHS_TO_NODE_IDS_REQUEST);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(request.TypeID.Data.FourByteData.Identifier, OpcUa::TRANSLATE_BROWSE_PATHS_TO_NODE_IDS_REQUEST);
 
   ASSERT_REQUEST_HEADER_EQ(request.Header);
 

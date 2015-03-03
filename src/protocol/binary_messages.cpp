@@ -166,14 +166,14 @@ namespace OpcUa
   RequestHeader::RequestHeader()
   {
     SessionAuthenticationToken.Encoding = EV_TWO_BYTE;
-    SessionAuthenticationToken.TwoByteData.Identifier = 0;
+    SessionAuthenticationToken.Data.TwoByteData.Identifier = 0;
     UtcTime = DateTime::Current();
     RequestHandle = 0;
     ReturnDiagnostics = 0;
     AuditEntryID = "";
     Timeout = 0; // in miliseconds
     Additional.TypeID.Encoding = EV_TWO_BYTE;
-    Additional.TypeID.TwoByteData.Identifier = 0;
+    Additional.TypeID.Data.TwoByteData.Identifier = 0;
   }
 
   OpenSecureChannelParameters::OpenSecureChannelParameters()

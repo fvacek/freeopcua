@@ -186,40 +186,40 @@ namespace
       case OpcUa::NodeIDEncoding::EV_TWO_BYTE:
       {
         std::cout << tabs << "Two byte:" << std::endl;
-        std::cout << dataTabs << "Identifier:" << (unsigned)nodeID.TwoByteData.Identifier << std::endl;
+        std::cout << dataTabs << "Identifier:" << (unsigned)nodeID.Data.TwoByteData.Identifier << std::endl;
         break;
       }
 
       case OpcUa::NodeIDEncoding::EV_FOUR_BYTE:
       {
         std::cout << tabs << "Four byte:" << std::endl;
-        std::cout << dataTabs << "NamespaceIndex:" << (unsigned)nodeID.FourByteData.NamespaceIndex << std::endl;
-        std::cout << dataTabs << "Identifier" << (unsigned)nodeID.FourByteData.Identifier << std::endl;
+        std::cout << dataTabs << "NamespaceIndex:" << (unsigned)nodeID.Data.FourByteData.NamespaceIndex << std::endl;
+        std::cout << dataTabs << "Identifier" << (unsigned)nodeID.Data.FourByteData.Identifier << std::endl;
         break;
       }
 
       case OpcUa::NodeIDEncoding::EV_NUMERIC:
       {
         std::cout << tabs << "Numeric:" << std::endl;
-        std::cout << dataTabs << "NamespaceIndex" << (unsigned)nodeID.NumericData.NamespaceIndex << std::endl;
-        std::cout << dataTabs << "Identifier" << (unsigned)nodeID.NumericData.Identifier << std::endl;
+        std::cout << dataTabs << "NamespaceIndex" << (unsigned)nodeID.Data.NumericData.NamespaceIndex << std::endl;
+        std::cout << dataTabs << "Identifier" << (unsigned)nodeID.Data.NumericData.Identifier << std::endl;
         break;
       }
 
       case OpcUa::NodeIDEncoding::EV_STRING:
       {
         std::cout << tabs << "String: " << std::endl;
-        std::cout << dataTabs << "NamespaceIndex: " << (unsigned)nodeID.StringData.NamespaceIndex << std::endl;
-        std::cout << dataTabs << "Identifier: " <<  nodeID.StringData.Identifier << std::endl;
+        std::cout << dataTabs << "NamespaceIndex: " << (unsigned)nodeID.Data.StringData.NamespaceIndex << std::endl;
+        std::cout << dataTabs << "Identifier: " <<  nodeID.Data.StringData.Identifier << std::endl;
         break;
       }
 
       case OpcUa::NodeIDEncoding::EV_BYTE_STRING:
       {
         std::cout << tabs << "Binary: " << std::endl;
-        std::cout << dataTabs << "NamespaceIndex: " << (unsigned)nodeID.BinaryData.NamespaceIndex << std::endl;
+        std::cout << dataTabs << "NamespaceIndex: " << (unsigned)nodeID.Data.BinaryData.NamespaceIndex << std::endl;
         std::cout << dataTabs << "Identifier: ";
-        for (auto val : nodeID.BinaryData.Identifier) {std::cout << (unsigned)val; }
+        for (auto val : nodeID.Data.BinaryData.Identifier) {std::cout << (unsigned)val; }
         std::cout << std::endl;
         break;
       }
@@ -227,8 +227,8 @@ namespace
       case OpcUa::NodeIDEncoding::EV_GUID:
       {
         std::cout << tabs << "Guid: " << std::endl;
-        std::cout << dataTabs << "Namespace Index: " << (unsigned)nodeID.GuidData.NamespaceIndex << std::endl;
-        const OpcUa::Guid& guid = nodeID.GuidData.Identifier;
+        std::cout << dataTabs << "Namespace Index: " << (unsigned)nodeID.Data.GuidData.NamespaceIndex << std::endl;
+        const OpcUa::Guid& guid = nodeID.Data.GuidData.Identifier;
         std::cout << dataTabs << "Identifier: " << std::hex << guid.Data1 << "-" << guid.Data2 << "-" << guid.Data3;
         for (auto val : guid.Data4) {std::cout << (unsigned)val; }
         break;

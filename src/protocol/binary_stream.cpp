@@ -150,7 +150,7 @@ namespace OpcUa
     : Encoding(encoding)
   {
     TypeID.Encoding = EV_FOUR_BYTE;
-    TypeID.FourByteData.Identifier = objectID;
+    TypeID.Data.FourByteData.Identifier = objectID;
   }
   ///////////////////////////////////////////////////////
   // IntegerID

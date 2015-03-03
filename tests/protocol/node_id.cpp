@@ -30,7 +30,7 @@ TEST(NodeID, DefaultConstructor)
 {
   NodeID id;
   ASSERT_EQ(id.Encoding, EV_TWO_BYTE);
-  ASSERT_EQ(id.TwoByteData.Identifier, 0);
+  ASSERT_EQ(id.Data.TwoByteData.Identifier, 0);
   ASSERT_EQ(id.ServerIndex, 0);
   ASSERT_EQ(id.NamespaceURI, std::string());
 }
@@ -39,7 +39,7 @@ TEST(NodeID, NumericConstructor)
 {
   NodeID id(99, 1);
   ASSERT_EQ(id.Encoding, EV_NUMERIC);
-  ASSERT_EQ(id.NumericData.Identifier, 99);
+  ASSERT_EQ(id.Data.NumericData.Identifier, 99);
   ASSERT_EQ(id.GetNamespaceIndex(), 1);
 }
 
@@ -55,7 +55,7 @@ TEST(Node, ConstructFromMessageID)
 {
   NodeID id(ACTIVATE_SESSION_REQUEST);
   ASSERT_EQ(id.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(id.FourByteData.Identifier, ACTIVATE_SESSION_REQUEST);
+  ASSERT_EQ(id.Data.FourByteData.Identifier, ACTIVATE_SESSION_REQUEST);
   ASSERT_EQ(id.ServerIndex, 0);
   ASSERT_EQ(id.NamespaceURI, std::string());
 }
@@ -64,7 +64,7 @@ TEST(Node, ConstructFromReferenceID)
 {
   NodeID id(ReferenceID::HasChild);
   ASSERT_EQ(id.Encoding, EV_NUMERIC);
-  ASSERT_EQ(id.NumericData.Identifier, static_cast<uint16_t>(ReferenceID::HasChild));
+  ASSERT_EQ(id.Data.NumericData.Identifier, static_cast<uint16_t>(ReferenceID::HasChild));
   ASSERT_EQ(id.ServerIndex, 0);
   ASSERT_EQ(id.NamespaceURI, std::string());
 }
@@ -93,11 +93,11 @@ TEST(Node, EqualIfDifferentTypeButEqualIdentifier)
 {
   NodeID id1;
   id1.Encoding = EV_TWO_BYTE;
-  id1.TwoByteData.Identifier = 1;
+  id1.Data.TwoByteData.Identifier = 1;
 
   NodeID id2;
   id2.Encoding = EV_FOUR_BYTE;
-  id2.FourByteData.Identifier = 1;
+  id2.Data.FourByteData.Identifier = 1;
   ASSERT_EQ(id1, id2);
 }
 
@@ -105,13 +105,13 @@ TEST(Node, DefferentIfDifferentNameSpace)
 {
   NodeID id1;
   id1.Encoding = EV_FOUR_BYTE;
-  id1.FourByteData.NamespaceIndex = 1;
-  id1.FourByteData.Identifier = 1;
+  id1.Data.FourByteData.NamespaceIndex = 1;
+  id1.Data.FourByteData.Identifier = 1;
 
   NodeID id2;
   id2.Encoding = EV_FOUR_BYTE;
-  id2.FourByteData.NamespaceIndex = 2;
-  id2.FourByteData.Identifier = 1;
+  id2.Data.FourByteData.NamespaceIndex = 2;
+  id2.Data.FourByteData.Identifier = 1;
 
   ASSERT_NE(id1, id2);
 }
@@ -135,7 +135,7 @@ TEST_F(NodeDeserialization, TwoByte)
   GetStream() >> id;
 
   ASSERT_EQ(id.Encoding, EV_TWO_BYTE);
-  ASSERT_EQ(id.TwoByteData.Identifier, 0x1);
+  ASSERT_EQ(id.Data.TwoByteData.Identifier, 0x1);
 }
 
 TEST_F(NodeDeserialization, FourByte)
@@ -154,8 +154,8 @@ TEST_F(NodeDeserialization, FourByte)
   GetStream() >> id;
 
   ASSERT_EQ(id.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(id.FourByteData.NamespaceIndex, 0x1);
-  ASSERT_EQ(id.FourByteData.Identifier, 0x2);
+  ASSERT_EQ(id.Data.FourByteData.NamespaceIndex, 0x1);
+  ASSERT_EQ(id.Data.FourByteData.Identifier, 0x2);
 }
 
 TEST_F(NodeDeserialization, Numeric)
@@ -174,8 +174,8 @@ TEST_F(NodeDeserialization, Numeric)
   GetStream() >> id;
 
   ASSERT_EQ(id.Encoding, EV_NUMERIC);
-  ASSERT_EQ(id.NumericData.NamespaceIndex, 0x1);
-  ASSERT_EQ(id.NumericData.Identifier, 0x2);
+  ASSERT_EQ(id.Data.NumericData.NamespaceIndex, 0x1);
+  ASSERT_EQ(id.Data.NumericData.Identifier, 0x2);
 }
 
 TEST_F(NodeDeserialization, String)
@@ -195,8 +195,8 @@ TEST_F(NodeDeserialization, String)
   GetStream() >> id;
 
   ASSERT_EQ(id.Encoding, EV_STRING);
-  ASSERT_EQ(id.StringData.NamespaceIndex, 0x1);
-  ASSERT_EQ(id.StringData.Identifier, "id");
+  ASSERT_EQ(id.Data.StringData.NamespaceIndex, 0x1);
+  ASSERT_EQ(id.Data.StringData.Identifier, "id");
 }
 
 TEST_F(NodeDeserialization, Guid)
@@ -216,9 +216,9 @@ TEST_F(NodeDeserialization, Guid)
   GetStream() >> id;
 
   ASSERT_EQ(id.Encoding, EV_BYTE_STRING);
-  ASSERT_EQ(id.BinaryData.NamespaceIndex, 0x1);
+  ASSERT_EQ(id.Data.BinaryData.NamespaceIndex, 0x1);
   std::vector<uint8_t> expectedBytes = {1, 2, 3, 4};
-  ASSERT_EQ(id.BinaryData.Identifier, expectedBytes);
+  ASSERT_EQ(id.Data.BinaryData.Identifier, expectedBytes);
 }
 
 TEST_F(NodeDeserialization, ByteString)
@@ -240,18 +240,18 @@ TEST_F(NodeDeserialization, ByteString)
   GetStream() >> id;
 
   ASSERT_EQ(id.Encoding, EV_GUID);
-  ASSERT_EQ(id.GuidData.NamespaceIndex, 0x1);
-  ASSERT_EQ(id.GuidData.Identifier.Data1, 0x01020304);
-  ASSERT_EQ(id.GuidData.Identifier.Data2, 0x0506);
-  ASSERT_EQ(id.GuidData.Identifier.Data3, 0x0708);
-  ASSERT_EQ(id.GuidData.Identifier.Data4[0], 0x01);
-  ASSERT_EQ(id.GuidData.Identifier.Data4[1], 0x02);
-  ASSERT_EQ(id.GuidData.Identifier.Data4[2], 0x03);
-  ASSERT_EQ(id.GuidData.Identifier.Data4[3], 0x04);
-  ASSERT_EQ(id.GuidData.Identifier.Data4[4], 0x05);
-  ASSERT_EQ(id.GuidData.Identifier.Data4[5], 0x06);
-  ASSERT_EQ(id.GuidData.Identifier.Data4[6], 0x07);
-  ASSERT_EQ(id.GuidData.Identifier.Data4[7], 0x08);
+  ASSERT_EQ(id.Data.GuidData.NamespaceIndex, 0x1);
+  ASSERT_EQ(id.Data.GuidData.Identifier.Data1, 0x01020304);
+  ASSERT_EQ(id.Data.GuidData.Identifier.Data2, 0x0506);
+  ASSERT_EQ(id.Data.GuidData.Identifier.Data3, 0x0708);
+  ASSERT_EQ(id.Data.GuidData.Identifier.Data4[0], 0x01);
+  ASSERT_EQ(id.Data.GuidData.Identifier.Data4[1], 0x02);
+  ASSERT_EQ(id.Data.GuidData.Identifier.Data4[2], 0x03);
+  ASSERT_EQ(id.Data.GuidData.Identifier.Data4[3], 0x04);
+  ASSERT_EQ(id.Data.GuidData.Identifier.Data4[4], 0x05);
+  ASSERT_EQ(id.Data.GuidData.Identifier.Data4[5], 0x06);
+  ASSERT_EQ(id.Data.GuidData.Identifier.Data4[6], 0x07);
+  ASSERT_EQ(id.Data.GuidData.Identifier.Data4[7], 0x08);
 }
 
 TEST_F(NodeDeserialization, NamespaceUri)
@@ -273,8 +273,8 @@ TEST_F(NodeDeserialization, NamespaceUri)
   GetStream() >> id;
 
   ASSERT_EQ(id.Encoding, uint8_t(EV_STRING | EV_NAMESPACE_URI_FLAG));
-  ASSERT_EQ(id.StringData.NamespaceIndex, 0x1);
-  ASSERT_EQ(id.StringData.Identifier, "id");
+  ASSERT_EQ(id.Data.StringData.NamespaceIndex, 0x1);
+  ASSERT_EQ(id.Data.StringData.Identifier, "id");
   ASSERT_EQ(id.NamespaceURI, "uri");
 }
 
@@ -296,8 +296,8 @@ TEST_F(NodeDeserialization, ServerIndexFlag)
   GetStream() >> id;
 
   ASSERT_EQ(id.Encoding, uint8_t(EV_STRING | EV_SERVER_INDEX_FLAG));
-  ASSERT_EQ(id.StringData.NamespaceIndex, 0x1);
-  ASSERT_EQ(id.StringData.Identifier, "id");
+  ASSERT_EQ(id.Data.StringData.NamespaceIndex, 0x1);
+  ASSERT_EQ(id.Data.StringData.Identifier, "id");
   ASSERT_EQ(id.ServerIndex, 1);
 }
 
@@ -321,8 +321,8 @@ TEST_F(NodeDeserialization, NamespaceUriAndServerIndex)
   GetStream() >> id;
 
   ASSERT_EQ(id.Encoding, uint8_t(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_SERVER_INDEX_FLAG));
-  ASSERT_EQ(id.StringData.NamespaceIndex, 0x1);
-  ASSERT_EQ(id.StringData.Identifier, "id");
+  ASSERT_EQ(id.Data.StringData.NamespaceIndex, 0x1);
+  ASSERT_EQ(id.Data.StringData.Identifier, "id");
   ASSERT_EQ(id.NamespaceURI, "uri");
   ASSERT_EQ(id.ServerIndex, 1);
 }
@@ -337,7 +337,7 @@ TEST_F(NodeSerialization, ToByte)
   using namespace OpcUa::Binary;
   NodeID id;
   id.Encoding = EV_TWO_BYTE;
-  id.TwoByteData.Identifier = 0x1;
+  id.Data.TwoByteData.Identifier = 0x1;
 
   const std::vector<char> expectedData = {
   EV_TWO_BYTE,
@@ -356,8 +356,8 @@ TEST_F(NodeSerialization, FourByte)
   using namespace OpcUa::Binary;
   NodeID id;
   id.Encoding = EV_FOUR_BYTE;
-  id.FourByteData.NamespaceIndex = 0x1;
-  id.FourByteData.Identifier = 0x2;
+  id.Data.FourByteData.NamespaceIndex = 0x1;
+  id.Data.FourByteData.Identifier = 0x2;
 
   const std::vector<char> expectedData = {
   EV_FOUR_BYTE,
@@ -377,8 +377,8 @@ TEST_F(NodeSerialization, Numeric)
   using namespace OpcUa::Binary;
   NodeID id;
   id.Encoding = EV_NUMERIC;
-  id.NumericData.NamespaceIndex = 0x1;
-  id.NumericData.Identifier = 0x2;
+  id.Data.NumericData.NamespaceIndex = 0x1;
+  id.Data.NumericData.Identifier = 0x2;
 
   const std::vector<char> expectedData = {
   EV_NUMERIC,
@@ -398,8 +398,8 @@ TEST_F(NodeSerialization, String)
   using namespace OpcUa::Binary;
   NodeID id;
   id.Encoding = EV_STRING;
-  id.StringData.NamespaceIndex = 0x1;
-  id.StringData.Identifier = "id";
+  id.Data.StringData.NamespaceIndex = 0x1;
+  id.Data.StringData.Identifier = "id";
 
   const std::vector<char> expectedData = {
   EV_STRING,
@@ -420,8 +420,8 @@ TEST_F(NodeSerialization, ByteString)
   using namespace OpcUa::Binary;
   NodeID id;
   id.Encoding = EV_BYTE_STRING;
-  id.BinaryData.NamespaceIndex = 0x1;
-  id.BinaryData.Identifier = {1, 2, 3, 4};
+  id.Data.BinaryData.NamespaceIndex = 0x1;
+  id.Data.BinaryData.Identifier = {1, 2, 3, 4};
 
   const std::vector<char> expectedData = {
   EV_BYTE_STRING,
@@ -442,18 +442,18 @@ TEST_F(NodeSerialization, Guid)
   using namespace OpcUa::Binary;
   NodeID id;
   id.Encoding = EV_GUID;
-  id.GuidData.NamespaceIndex = 0x1;
-  id.GuidData.Identifier.Data1 = 0x01020304;
-  id.GuidData.Identifier.Data2 = 0x0506;
-  id.GuidData.Identifier.Data3 = 0x0708;
-  id.GuidData.Identifier.Data4[0] = 0x01;
-  id.GuidData.Identifier.Data4[1] = 0x02;
-  id.GuidData.Identifier.Data4[2] = 0x03;
-  id.GuidData.Identifier.Data4[3] = 0x04;
-  id.GuidData.Identifier.Data4[4] = 0x05;
-  id.GuidData.Identifier.Data4[5] = 0x06;
-  id.GuidData.Identifier.Data4[6] = 0x07;
-  id.GuidData.Identifier.Data4[7] = 0x08;
+  id.Data.GuidData.NamespaceIndex = 0x1;
+  id.Data.GuidData.Identifier.Data1 = 0x01020304;
+  id.Data.GuidData.Identifier.Data2 = 0x0506;
+  id.Data.GuidData.Identifier.Data3 = 0x0708;
+  id.Data.GuidData.Identifier.Data4[0] = 0x01;
+  id.Data.GuidData.Identifier.Data4[1] = 0x02;
+  id.Data.GuidData.Identifier.Data4[2] = 0x03;
+  id.Data.GuidData.Identifier.Data4[3] = 0x04;
+  id.Data.GuidData.Identifier.Data4[4] = 0x05;
+  id.Data.GuidData.Identifier.Data4[5] = 0x06;
+  id.Data.GuidData.Identifier.Data4[6] = 0x07;
+  id.Data.GuidData.Identifier.Data4[7] = 0x08;
 
   const std::vector<char> expectedData = {
     EV_GUID,
@@ -476,8 +476,8 @@ TEST_F(NodeSerialization, NamespaceUri)
   using namespace OpcUa::Binary;
   ExpandedNodeID id;
   id.Encoding = static_cast<NodeIDEncoding>(EV_STRING | EV_NAMESPACE_URI_FLAG);
-  id.StringData.NamespaceIndex = 0x1;
-  id.StringData.Identifier = "id";
+  id.Data.StringData.NamespaceIndex = 0x1;
+  id.Data.StringData.Identifier = "id";
   id.NamespaceURI = "uri";
 
   const std::vector<char> expectedData = {
@@ -501,8 +501,8 @@ TEST_F(NodeSerialization, ServerIndexFlag)
   using namespace OpcUa::Binary;
   ExpandedNodeID id;
   id.Encoding = static_cast<NodeIDEncoding>(EV_STRING | EV_SERVER_INDEX_FLAG);
-  id.StringData.NamespaceIndex = 0x1;
-  id.StringData.Identifier = "id";
+  id.Data.StringData.NamespaceIndex = 0x1;
+  id.Data.StringData.Identifier = "id";
   id.ServerIndex = 1;
 
   const std::vector<char> expectedData = {
@@ -525,8 +525,8 @@ TEST_F(NodeSerialization, NamespaceUriAndServerIndex)
   using namespace OpcUa::Binary;
   ExpandedNodeID id;
   id.Encoding = static_cast<NodeIDEncoding>(EV_STRING | EV_NAMESPACE_URI_FLAG | EV_SERVER_INDEX_FLAG);
-  id.StringData.NamespaceIndex = 0x1;
-  id.StringData.Identifier = "id";
+  id.Data.StringData.NamespaceIndex = 0x1;
+  id.Data.StringData.Identifier = "id";
   id.NamespaceURI = "uri";
   id.ServerIndex = 1;
 

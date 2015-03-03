@@ -87,8 +87,8 @@ TEST_F(MonitoredItemsSerialization, DISABLED_CreateMonitoredItemsResponse)
 
 
   ASSERT_EQ(response.TypeID.Encoding, EV_FOUR_BYTE);
-  ASSERT_EQ(response.TypeID.FourByteData.NamespaceIndex, 0);
-  ASSERT_EQ(response.TypeID.FourByteData.Identifier, OpcUa::CREATE_MONITORED_ITEMS_RESPONSE);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.NamespaceIndex, 0);
+  ASSERT_EQ(response.TypeID.Data.FourByteData.Identifier, OpcUa::CREATE_MONITORED_ITEMS_RESPONSE);
 
   FILL_TEST_RESPONSE_HEADER(response.Header);
 
