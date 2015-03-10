@@ -212,6 +212,69 @@ namespace OpcUa
     DIM_INNER_DIAGNOSTIC_INFO = 0x40
   };
 
+  enum class ServerState : int32_t
+  {
+    Running,
+    Failed,
+    NoConfiguration,
+    Suspended,
+    Shutdown,
+    Test,
+    CommunicationFault,
+    Unknown
+  };
+
+  struct BuildInfoType
+  {
+    std::string ProductUri;
+    std::string ManufacturerName;
+    std::string ProductName;
+    std::string SoftwareVersion;
+    std::string BuildNumber;
+    DateTime BuildDate;
+
+    BuildInfoType()
+    {
+    }
+
+    bool operator== (const BuildInfoType& o) const
+    {
+      return ProductUri == o.ProductUri
+          && ManufacturerName == o.ManufacturerName
+          && ProductName == o.ProductName
+          && SoftwareVersion == o.SoftwareVersion
+          && BuildNumber == o.BuildNumber
+          && BuildDate == o.BuildDate;
+    }
+  };
+
+  struct ServerStatusDataType
+  {
+    DateTime StartTime;
+    DateTime CurrentTime;
+    ServerState State;
+    BuildInfoType BuildInfo;
+    uint32_t SecondsTillShutdown;
+    LocalizedText ShutdownReason;
+
+    ServerStatusDataType()
+      : State(ServerState::Unknown), SecondsTillShutdown(0)
+    {
+    }
+
+    bool operator== (const ServerStatusDataType& o) const
+    {
+      return StartTime == o.StartTime
+          && CurrentTime == o.CurrentTime
+          && State == o.State
+          && BuildInfo == o.BuildInfo
+          && SecondsTillShutdown == o.SecondsTillShutdown
+          && ShutdownReason == o.ShutdownReason;
+    }
+  };
+
+  typedef std::vector<ServerStatusDataType> ServerStatusDataTypeList;
+
   struct DiagnosticInfo
   {
     DiagnosticInfoMask EncodingMask;

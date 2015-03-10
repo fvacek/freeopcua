@@ -314,6 +314,16 @@ namespace OpcUa
     else if (t == typeid(std::vector<DiagnosticInfo>))
       return Compare<std::vector<DiagnosticInfo>>(*this, var);
 
+    else if (t == typeid(BuildInfoType))
+      return Compare<BuildInfoType>(*this, var);
+    else if (t == typeid(std::vector<BuildInfoType>))
+      return Compare<std::vector<BuildInfoType>>(*this, var);
+
+    else if (t == typeid(ServerStatusDataType))
+      return Compare<ServerStatusDataType>(*this, var);
+    else if (t == typeid(std::vector<ServerStatusDataType>))
+      return Compare<std::vector<ServerStatusDataType>>(*this, var);
+
     throw std::logic_error(std::string("Unknown variant type '") + t.name() + std::string("'."));
   }
 
@@ -757,8 +767,14 @@ namespace OpcUa
         var = deserializer.get<DiagnosticInfo>();
       else if(encodingMask == ((uint8_t)VariantType::DIAGNOSTIC_INFO | HAS_ARRAY_MASK))
         var = deserializer.get<std::vector<DiagnosticInfo>>();
-      else if(encodingMask == ((uint8_t)VariantType::EXTENSION_OBJECT))
-        throw std::logic_error("Deserialization of EXTENSION_OBJECT type is not supported yet.");
+      else if(encodingMask == ((uint8_t)VariantType::EXTENSION_OBJECT)) {
+        ExtensionObjectHeader hdr = deserializer.get<ExtensionObjectHeader>();
+        if(hdr.TypeID == NodeID(ObjectID::ServerStatusDataType)) {
+          var = deserializer.get<ServerStatusDataType>();
+        }
+        else
+          throw std::logic_error("Deserialization of EXTENSION_OBJECT is not supported yet.");
+      }
       else if(encodingMask == ((uint8_t)VariantType::EXTENSION_OBJECT | HAS_ARRAY_MASK))
         throw std::logic_error("Deserialization of EXTENSION_OBJECT[] array is not supported yet.");
 

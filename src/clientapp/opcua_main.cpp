@@ -395,6 +395,11 @@ namespace
       std::cout << "!!!TODO!!!";
     }
 
+    void PrintValue(const OpcUa::ServerStatusDataType& )
+    {
+      std::cout << "!!!TODO!!!";
+    }
+
     void PrintValue(const OpcUa::Variant& info)
     {
       std::cout << "!!!TODO!!!";

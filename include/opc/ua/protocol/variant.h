@@ -152,6 +152,8 @@ namespace OpcUa
     virtual void Visit(const std::vector<Variant>& val) = 0;
     virtual void Visit(const DiagnosticInfo& val) = 0;
     virtual void Visit(const std::vector<DiagnosticInfo>& val) = 0;
+    virtual void Visit(const ServerStatusDataType& val) = 0;
+    virtual void Visit(const std::vector<ServerStatusDataType>& val) = 0;
   };
 
 

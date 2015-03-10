@@ -1291,6 +1291,63 @@ namespace OpcUa
       *this >> name.Name;
     }
 
+    template<>
+    void DataSerializer::Serialize<ServerState>(const ServerState& ss)
+    {
+      *this << static_cast<int32_t>(ss);
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<ServerState>(ServerState&  ss)
+    {
+      int32_t i;
+      *this >> i;
+      ss = static_cast<ServerState>(i);
+    }
+
+    template<>
+    void DataSerializer::Serialize<BuildInfoType>(const BuildInfoType& bi)
+    {
+      *this << bi.ProductUri;
+      *this << bi.ManufacturerName;
+      *this << bi.ProductName;
+      *this << bi.SoftwareVersion;
+      *this << bi.BuildNumber;
+      *this << bi.BuildDate;
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<BuildInfoType>(BuildInfoType&  bi)
+    {
+      *this >> bi.ProductUri;
+      *this >> bi.ManufacturerName;
+      *this >> bi.ProductName;
+      *this >> bi.SoftwareVersion;
+      *this >> bi.BuildNumber;
+      *this >> bi.BuildDate;
+    }
+
+    template<>
+    void DataSerializer::Serialize<ServerStatusDataType>(const ServerStatusDataType& dt)
+    {
+      *this << dt.StartTime;
+      *this << dt.CurrentTime;
+      *this << dt.State;
+      *this << dt.BuildInfo;
+      *this << dt.SecondsTillShutdown;
+      *this << dt.ShutdownReason;
+    }
+
+    template<>
+    void DataDeserializer::Deserialize<ServerStatusDataType>(ServerStatusDataType& dt)
+    {
+      *this >> dt.StartTime;
+      *this >> dt.CurrentTime;
+      *this >> dt.State;
+      *this >> dt.BuildInfo;
+      *this >> dt.SecondsTillShutdown;
+      *this >> dt.ShutdownReason;
+    }
     ////////////////////////////////////////////////////////////////////
     // IntegerID
     ////////////////////////////////////////////////////////////////////

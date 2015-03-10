@@ -72,6 +72,8 @@ namespace OpcUa
     virtual void Visit(const std::vector<Variant>& val) { Impl.OnContainer(val); }
     virtual void Visit(const DiagnosticInfo& val) { Impl.OnScalar(val); }
     virtual void Visit(const std::vector<DiagnosticInfo>& val) { Impl.OnContainer(val); }
+    virtual void Visit(const ServerStatusDataType& val) { Impl.OnScalar(val); }
+    virtual void Visit(const std::vector<ServerStatusDataType>& val) { Impl.OnContainer(val); }
 
   private:
     Delegate& Impl;

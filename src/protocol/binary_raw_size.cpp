@@ -397,13 +397,40 @@ namespace OpcUa
     {
       return RawSize(name.NamespaceIndex) + RawSize(name.Name);
     };
-    template<>
 
+    template<>
     std::size_t RawSize<IntegerID>(const IntegerID&)
     {
       return 4;
     };
 
+    template<>
+    std::size_t RawSize<BuildInfoType>(const BuildInfoType& bi)
+    {
+      return RawSize(bi.ProductUri)
+          + RawSize(bi.ManufacturerName)
+          + RawSize(bi.ProductName)
+          + RawSize(bi.SoftwareVersion)
+          + RawSize(bi.BuildNumber)
+          + RawSize(bi.BuildDate);
+    }
+
+    template<>
+    std::size_t RawSize<ServerState>(const ServerState& ss)
+    {
+      return sizeof(int32_t);
+    }
+
+    template<>
+    std::size_t RawSize<ServerStatusDataType>(const ServerStatusDataType& dt)
+    {
+      return RawSize(dt.StartTime)
+          + RawSize(dt.CurrentTime)
+          + RawSize(dt.State)
+          + RawSize(dt.BuildInfo)
+          + RawSize(dt.SecondsTillShutdown)
+          + RawSize(dt.ShutdownReason);
+    }
   }
 }
 
